@@ -153,7 +153,7 @@ def start_handler(event):
     # service_selection = choice_service.get()
     # corrector_selection = choice_corrector.get()
     #вызываем функцию для обработки текста с вводными из выпадающих мню
-    Model.operate(language_selection, translate_selection, service_selection, corrector_selection, input_files_selection, output_files_selection)
+    model.operate(language_selection, translate_selection, service_selection, corrector_selection, input_files_selection, output_files_selection)
     start_button.config(text='Готово!')
 
 
