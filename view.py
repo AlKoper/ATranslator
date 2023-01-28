@@ -50,8 +50,11 @@ def setup():
     # text_output = Entry(root, background='white', justify=LEFT, width=51, textvariable=choice_output)
     text_input = Entry(root, background='white', justify=LEFT, width=51)
     text_output = Entry(root, background='white', justify=LEFT, width=51)
-    text_input.insert(0, 'D:\Translated texts\Input files')    #Используем этот адрес по умолчанию (место расположения исходных текстов)
-    text_output.insert(0, 'D:\Translated texts\Output files')    #Используем этот адрес по умолчанию (место, куда выкладываем переработанные тексты)
+
+    # text_input.insert(0, 'D:\Translated texts\Input files')    #Используем этот адрес по умолчанию (место расположения исходных текстов) (ПК)
+    # text_output.insert(0, 'D:\Translated texts\Output files')    #Используем этот адрес по умолчанию (место, куда выкладываем переработанные тексты) (ПК)
+    text_input.insert(0, '/media/andrew/75A74AA74301978F/PycharmProjects/ATranslator/Input files/')  # Используем этот адрес по умолчанию (место расположения исходных текстов) (Ноут)
+    text_output.insert(0, '/media/andrew/75A74AA74301978F/PycharmProjects/ATranslator/Output files/')  # Используем этот адрес по умолчанию (место, куда выкладываем переработанные тексты) (Ноут)
 
     # Создадим списки (выпадающие меню):
     #Сперва создадим переменные, которые будут хранить зачения выбора пользователя перед запуском обработки текста
