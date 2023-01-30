@@ -8,7 +8,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
-
+import model
 
 #Создадим функцию запуска браузера
 def browser_launch(language, translate):
@@ -16,7 +16,8 @@ def browser_launch(language, translate):
     options = Options()    #здесь будут содержаться настройки браузера
     options.headless = False    #отключу показ браузера (при False будет показывать)
     # browser = webdriver.Firefox(options=options, service=Service(log_path=os.devnull, executable_path='geckodriver.exe'))    #инициируем драйвер браузера Firefox (ПК)
-    browser = webdriver.Chrome(executable_path='/media/andrew/75A74AA74301978F/PycharmProjects/ATranslator/geckodriver/chromedriver')  # инициируем драйвер браузера Chrome (Ноут)
+    # browser = webdriver.Chrome(executable_path='/media/andrew/75A74AA74301978F/PycharmProjects/ATranslator/geckodriver/chromedriver')  # инициируем драйвер браузера Chrome (Ноут)
+    browser = webdriver.Chrome(executable_path=model.Openfilelinks()[2])  # инициируем драйвер браузера Chrome (Ноут)
     translate_url = 'https://www.deepl.com/translator#' + language + '/' + translate + '/'    #Создаем адрем перевода, который зависит от исходного языка и языка перевода
 
     browser.get(translate_url)    #открываем сайт

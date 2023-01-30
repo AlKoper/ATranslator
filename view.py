@@ -24,12 +24,12 @@ def center(win):
 #Объявим функцию с настройкой графического интерфейса
 def setup():
     # global choice_language, choice_translate, choice_service, choice_corrector, start_button, choice_input, choice_output
-    global combo_language, combo_translate, combo_service, combo_corrector, start_button, text_input, text_output
+    global combo_language, combo_translate, combo_service, combo_corrector, start_button, text_input, text_output, webdriver_address
     #глобальные переменнеые, которые будем использовать в фукнции нажатия кнопки
     # Создадим окно верхнего уровня
     root = Tk()
     root.title('A_Translator')    #введем тайтл
-    root.geometry('350x310')    #установим размер окна
+    root.geometry('450x370')    #установим размер окна
     root.config(bg='light blue')    #установим фон окна
     center(root)
 
@@ -40,6 +40,7 @@ def setup():
     text_corrector = Label(root, width=10, font='Calibri 17', text='Корректор:', bg='light blue')
     text_input_label = Label(root, width=9, font='Calibri 12', text='Input files:', bg='light blue')
     text_output_label = Label(root, width=9, font='Calibri 12', text='Output files:', bg='light blue')
+    webdriver_label = Label(root, width=9, font='Calibri 12', text='WebDriver:', bg='light blue')
     start_button = Button(root, font=('Calibri', 14), text='Поехали!', width=20, bg='light grey')
 
     #Создадим менюшки для ввода текста ввода/вывода текстовых файлов
@@ -50,11 +51,17 @@ def setup():
     # text_output = Entry(root, background='white', justify=LEFT, width=51, textvariable=choice_output)
     text_input = Entry(root, background='white', justify=LEFT, width=51)
     text_output = Entry(root, background='white', justify=LEFT, width=51)
+    webdriver_address = Entry(root, background='white', justify=LEFT, width=51)
 
+    # прочитаем файл, чтобы узнать расположение папок для текстовых файлов
     # text_input.insert(0, 'D:\Translated texts\Input files')    #Используем этот адрес по умолчанию (место расположения исходных текстов) (ПК)
     # text_output.insert(0, 'D:\Translated texts\Output files')    #Используем этот адрес по умолчанию (место, куда выкладываем переработанные тексты) (ПК)
-    text_input.insert(0, '/media/andrew/75A74AA74301978F/PycharmProjects/ATranslator/Input files/')  # Используем этот адрес по умолчанию (место расположения исходных текстов) (Ноут)
-    text_output.insert(0, '/media/andrew/75A74AA74301978F/PycharmProjects/ATranslator/Output files/')  # Используем этот адрес по умолчанию (место, куда выкладываем переработанные тексты) (Ноут)
+    # webdriver_address.insert(0, '')    #Используем этот адрес по умолчанию (место, куда выкладываем переработанные тексты) (ПК)
+    # text_input.insert(0, '/media/andrew/75A74AA74301978F/PycharmProjects/ATranslator/Input files/')  # Используем этот адрес по умолчанию (место расположения исходных текстов) (Ноут)
+    # text_output.insert(0, '/media/andrew/75A74AA74301978F/PycharmProjects/ATranslator/Output files/')  # Используем этот адрес по умолчанию (место, куда выкладываем переработанные тексты) (Ноут)
+    text_input.insert(0, model.Openfilelinks()[0]) # Используем этот адрес по умолчанию (место расположения исходных текстов) (Ноут)
+    text_output.insert(0, model.Openfilelinks()[1]) # Используем этот адрес по умолчанию (место, куда выкладываем переработанные тексты) (Ноут)
+    webdriver_address.insert(0, model.Openfilelinks()[2])   # Используем этот адрес по умолчанию (место, куда выкладываем переработанные тексты) (Ноут)
 
     # Создадим списки (выпадающие меню):
     #Сперва создадим переменные, которые будут хранить зачения выбора пользователя перед запуском обработки текста
@@ -89,37 +96,28 @@ def setup():
     combo_corrector['values'] = corrector_values    #Зададим значения языка для грамматической/орфографической проверки
     combo_corrector.current(0)  #Устанавливаем по умолчанию первое значение из списка
 
-    #Разместим виджеты в рут окне согласно разработанного плана, используя для этого менеджер компановки:
-      # 1-й вариант размещения виджетов
-    # text_input_label.grid(row=0, column=0,pady=0, padx=20, sticky=W)
-    # text_input.grid(row=1, columnspan=2)
-    # text_output_label.grid(row=2, column=0, pady=0, padx=24, sticky=W)
-    # text_output.grid(row=3, columnspan=2)
-
-    # text_language.grid(row=5, column=0, pady=10, padx=10, sticky=W)
-    # combo_language.grid(row=6, column=0, pady=10, padx=20, sticky=W)
-    # text_translate.grid(row=5, column=1, pady=10, padx=20, sticky=E)
-    # combo_translate.grid(row=6, column=1, pady=10, padx=20, sticky=E)
-    # text_service.grid(row=7, column=0, pady=10, padx=20, sticky=W)
-    # combo_service.grid(row=8, column=0, pady=10, padx=20, sticky=W)
-    # text_corrector.grid(row=7, column=1, pady=10, padx=20, sticky=E)
-    # combo_corrector.grid(row=8, column=1, pady=10, padx=20, sticky=E)
-    # start_button.grid(row=9, columnspan=2, pady=10)
-
-      #2-й вариант размещения виджетов
+    #2-й вариант размещения виджетов
+    # размещаем вводнеы данные
     text_input_label.grid(row=0, column=0, pady=0, padx=16, sticky=W)
     text_input.grid(row=1, padx=20, columnspan=2)
     text_output_label.grid(row=2, column=0, pady=0, padx=20, sticky=W)
     text_output.grid(row=3, padx=20, columnspan=2)
-    text_language.grid(row=4, column=0, pady=0, padx=16, sticky=E)
-    combo_language.grid(row=4, column=1, pady=0, padx=10, sticky=W)
-    text_translate.grid(row=5, column=0, pady=0, padx=22, sticky=E)
-    combo_translate.grid(row=5, column=1, pady=0, padx=10, sticky=W)
-    text_service.grid(row=6, column=0, pady=0, padx=20, sticky=E)
-    combo_service.grid(row=6, column=1, pady=0, padx=10, sticky=W)
-    text_corrector.grid(row=7, column=0, pady=0, padx=20, sticky=E)
-    combo_corrector.grid(row=7, column=1, pady=0, padx=10, sticky=W)
-    start_button.grid(row=8, columnspan=2, pady=20)
+    webdriver_label.grid(row=4, column=0, pady=0, padx=16, sticky=W)
+    webdriver_address.grid(row=5, padx=20, columnspan=2)
+    # размещаем разделяющую линию
+    line = Canvas(root, width=300, height=30, bg='light blue', highlightthickness=0)
+    line.create_line(5, 15, 295, 15, fill='black', width=2)
+    line.grid(row=6, padx=0, columnspan=2)
+    # размещаем выбор сервисов и кнопку
+    text_language.grid(row=7, column=0, pady=0, padx=16, sticky=E)
+    combo_language.grid(row=7, column=1, pady=0, padx=10, sticky=W)
+    text_translate.grid(row=8, column=0, pady=0, padx=22, sticky=E)
+    combo_translate.grid(row=8, column=1, pady=0, padx=10, sticky=W)
+    text_service.grid(row=9, column=0, pady=0, padx=20, sticky=E)
+    combo_service.grid(row=9, column=1, pady=0, padx=10, sticky=W)
+    text_corrector.grid(row=10, column=0, pady=0, padx=20, sticky=E)
+    combo_corrector.grid(row=10, column=1, pady=0, padx=10, sticky=W)
+    start_button.grid(row=11, columnspan=2, pady=20)
 
     # Содадим взаимодействие с виджетами
     combo_language.bind("<<ComboboxSelected>>", menu_handler)
@@ -136,18 +134,23 @@ def menu_handler(event):
 
 #Обработчик для кнопки
 def start_handler(event):
-    global combo_language, combo_translate, combo_service, combo_corrector, start_button, text_input, text_output
+    global combo_language, combo_translate, combo_service, combo_corrector, start_button, text_input, text_output, webdriver_address
     # global choice_language, choice_translate, choice_service, choice_corrector, start_button, choice_input, choice_output
     #Возвратим значения из выпадающих меню и присвоим их соответствующим переменным
     start_button.config(text='В процессе...')
     input_files_selection = text_input.get()
     output_files_selection = text_output.get()
+    webdriver_selection = webdriver_address.get()
 
     language_selection = combo_language.get()
     translate_selection = combo_translate.get()
     service_selection = combo_service.get()
     corrector_selection = combo_corrector.get()
 
+    # сохраним в файл пути для вводных значений для будущего использования (input, output and webdriver links)
+    new_FileLinks = ['Input files:', input_files_selection, 'Output files:', output_files_selection, 'WebDriver:', webdriver_selection]
+    with open('FileLinks.txt', 'w') as file:
+        file.writelines("%s\n" % line for line in new_FileLinks)
 
     # input_files_selection = choice_input.get()
     # output_files_selection = choice_output.get()

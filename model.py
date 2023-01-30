@@ -80,6 +80,12 @@ def operate(language, translate, service, corrector, input_files, output_files):
     return
 
 
+# Создадим функцию открытия и чтения адресов папок из файла
+def Openfilelinks():
+    with open('FileLinks.txt', 'r') as file:
+        lines = file.readlines()
+    return lines[1].replace('\n', ''), lines[3].replace('\n', ''), lines[5].replace('\n', '')
+
 
 
 
