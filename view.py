@@ -143,6 +143,7 @@ def setup():
     combo_translate.bind("<<ComboboxSelected>>", menu_handler)
     combo_service.bind("<<ComboboxSelected>>", menu_handler)
     combo_corrector.bind("<<ComboboxSelected>>", menu_handler)
+    combo_deeplwrite.bind("<<ComboboxSelected>>", menu_handler)
     start_button.bind('<Button-1>', start_handler)  # связываем событие (нажатие Button-1 [левая кнопка мышки]) и функцию start_handler
     options_button.bind('<Button-1>', options_handler)  # связываем событие (нажатие Button-1 [левая кнопка мышки]) и функцию options_handler
 
@@ -175,14 +176,14 @@ def start_handler(event):
     # service_selection = choice_service.get()
     # corrector_selection = choice_corrector.get()
     if combo_deeplwrite.get() == 'Нет':
-        model.operate(combo_language.get(), combo_translate.get(), combo_service.get(), combo_corrector.get(), model.Openfilelinks()[0], model.Openfilelinks()[1])    # Запускаем функцию перевода текстов
+        model.operate(combo_language.get(), combo_translate.get(), combo_service.get(), combo_corrector.get(), model.Openfilelinks()[0], model.Openfilelinks()[1], model.Openfilelinks()[4])    # Запускаем функцию перевода текстов
     else:
-        deepL.deepl_write()    # Запускаем функцию редактирования текста с помощью DeepL.Write
+        deepL.deepl_write(model.Openfilelinks()[4])    # Запускаем функцию редактирования текста с помощью DeepL.Write
     start_button.config(text='Готово!')
 
 #Обработчик для кнопки options_button
 def options_handler(event):
-    global options_window, text_input, text_output, text_deeplwrite, webdriverfiles
+    global options_window, text_input, text_output, text_deeplwrite, webdriverfiles, combo_webdriver
     # Создадим окно настроек и расположим его по центру
     options_window = tkinter.Toplevel(root)
     options_window.title('Настройки')
@@ -233,7 +234,7 @@ def options_handler(event):
 # обработчик для кнопки save_button
 def save_handler(event):
     # сохраним в FileLinks.txt вводнные данные (input, output, deepl.write and webdriver addresses)
-    new_FileLinks = ['Input files:', text_input.get(), 'Output files:', text_output.get(), 'Output DeepL edited files:', text_deeplwrite.get(), 'WebDriver:', webdriverfiles.get()]
+    new_FileLinks = ['Input files:', text_input.get(), 'Output files:', text_output.get(), 'Output DeepL edited files:', text_deeplwrite.get(), 'WebDriver:', webdriverfiles.get(), combo_webdriver.get()]
     with open('FileLinks.txt', 'w') as file:
         file.writelines("%s\n" % line for line in new_FileLinks)
     options_window.destroy()

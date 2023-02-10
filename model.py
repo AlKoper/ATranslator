@@ -33,7 +33,6 @@ def text_translate(text, sour, dest, service):    #sour - язык исходн�
     Translate_service.clean_cache()
     return result
 
-
 #Создадим функцию проверки орфографии и грамматики переведенного текста
 def text_correct(text, corrector):
     tool = language_tool_python.LanguageTool(corrector)
@@ -45,7 +44,7 @@ def text_correct(text, corrector):
 def Openfilelinks():
     with open('FileLinks.txt', 'r') as file:
         lines = file.readlines()
-    return lines[1].replace('\n', ''), lines[3].replace('\n', ''), lines[5].replace('\n', ''), lines[7].replace('\n', '')
+    return lines[1].replace('\n', ''), lines[3].replace('\n', ''), lines[5].replace('\n', ''), lines[7].replace('\n', ''), lines[8].replace('\n', '')
 
 
 #Создадим функцию для сохранения переведенного текста в новый файл
@@ -63,14 +62,12 @@ def DeeplWrite_save(filename, text):
 
 
 #Функция обработки текста
-def operate(language, translate, service, corrector, input_files, output_files):
-    if service == 'DeepL':    #провереям условие для выбора сервиса перевода
-        deepL.browser_launch(language, translate)    #открываем браузер и сервси для первода, указав исходный язык и язык перевода
+def operate(language, translate, service, corrector, input_files, output_files, web):
     for text_file in (Path(input_files).glob('*.txt')):  #редактируем каждый находящийся текстовый файл в папке по отдельности
         file = open(text_file, 'r', encoding="utf-8")
         translated_text = ''    #создаем переменную, которая будет хранить переведенный текст, обнуляем с каждым новым текстом
         if service == 'DeepL':    #провереям условие для выбора сервиса перевода
-            translated_text = deepL.browser_translate(file)    #запускаем функцию перевода и возвращаем переведенный текст и название файла для будущего сохранения
+            translated_text = deepL.browser_translate(file, language, translate, web)    #запускаем функцию перевода и возвращаем переведенный текст и название файла для будущего сохранения
         else:    #пропишем перевод для всех остальных сервисов
             for line in file:    #переводим текст для каждой строки из файла
                 if line == '\n':    #проверяем условие, если пустая строка, то записываем её в translated_text и идем дальше
@@ -86,10 +83,6 @@ def operate(language, translate, service, corrector, input_files, output_files):
             corrected_text = text_correct(translated_text, corrector)    #возвращаем откорректированный (орфография+грамматика) текст и записываем в переменную
         #Сохраним переведенный и откорректированный текст в новом файле
         ed_text_save(text_file.name, corrected_text, translate, service, output_files)
-
-    if service == 'DeepL':    #провереям условие для выбора сервиса перевода
-        deepL.browser_close()    #закрываем браузер, если использовали DeepL сервис
-    return
 
 
 
