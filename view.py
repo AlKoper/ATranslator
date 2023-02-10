@@ -1,4 +1,3 @@
-# import tkinter
 import tkinter
 from tkinter import *    #Импортируем библиотеку для создания графического интерфейса
 from tkinter.ttk import Combobox
@@ -78,7 +77,6 @@ def setup():
     language_values = ('ru', 'en', 'de', 'fr', 'it', 'es', 'pt', 'ja')
     translate_values = ('en', 'ru', 'de', 'fr', 'it', 'es', 'pt', 'ja')
     service_values = ('DeepL', 'Microsoft','Google', 'Reverso', 'TranslateCom', 'Yandex', 'Multi')
-    corrector_values = ('', 'en-US', 'en-GB', 'ru', 'de-DE', 'it', 'es', 'pt', 'ja')
     deeplwrite_values = ('Нет', 'Да')
     #Создадим выпадающие меню
     #Меню исходного языка
@@ -100,11 +98,6 @@ def setup():
     combo_deeplwrite = Combobox(root)
     combo_deeplwrite['values'] = deeplwrite_values    #Зададим значения сервисов для перевода
     combo_deeplwrite.current(0)  # Устанавливаем по умолчанию первое значение из списка
-    # Меню языка корректора
-    # combo_corrector = Combobox(root, textvariable=choice_corrector)
-    combo_corrector = Combobox(root)
-    combo_corrector['values'] = corrector_values    #Зададим значения языка для грамматической/орфографической проверки
-    combo_corrector.current(0)  #Устанавливаем по умолчанию первое значение из списка
 
     #2-й вариант размещения виджетов
     # размещаем вводнеы данные
@@ -115,9 +108,9 @@ def setup():
     # webdriverfiles_label.grid(row=4, column=0, pady=0, padx=21, sticky=W)
     # webdriver_address.grid(row=5, padx=20, columnspan=2)
     # размещаем разделяющую линию
-    line = Canvas(root, width=300, height=30, bg='light blue', highlightthickness=0)
+    line = Canvas(root, width=300, height=20, bg='light blue', highlightthickness=0)
     line.create_line(5, 15, 295, 15, fill='black', width=2)
-    line.grid(row=0, padx=0, columnspan=2)
+    line.grid(row=0, padx=0, pady=10, columnspan=2)
     # размещаем выбор сервисов и кнопку
     text_language.grid(row=1, column=0, pady=0, padx=16, sticky=E)
     combo_language.grid(row=1, column=1, pady=0, padx=10, sticky=W)
@@ -127,22 +120,19 @@ def setup():
     combo_service.grid(row=3, column=1, pady=0, padx=10, sticky=W)
     deeplwrite_label.grid(row=4, column=0, pady=0, padx=27, sticky=E)
     combo_deeplwrite.grid(row=4, column=1, pady=0, padx=10, sticky=W)
-    text_corrector.grid(row=5, column=0, pady=0, padx=20, sticky=E)
-    combo_corrector.grid(row=5, column=1, pady=0, padx=10, sticky=W)
     # размещаем разделяющую линию
-    line = Canvas(root, width=300, height=30, bg='light blue', highlightthickness=0)
+    line = Canvas(root, width=300, height=40, bg='light blue', highlightthickness=0)
     line.create_line(5, 15, 295, 15, fill='black', width=2)
-    line.grid(row=6, padx=0, columnspan=2)
+    line.grid(row=5, padx=0, columnspan=2)
     # размещаем кнопки
-    start_button.grid(row=7, columnspan=2, pady=0)
-    options_button.grid(row=8, columnspan=2, pady=0, padx=0)
+    start_button.grid(row=6, columnspan=2, pady=0)
+    options_button.grid(row=7, columnspan=2, pady=0, padx=0)
 
 
     # Содадим взаимодействие с виджетами
     combo_language.bind("<<ComboboxSelected>>", menu_handler)
     combo_translate.bind("<<ComboboxSelected>>", menu_handler)
     combo_service.bind("<<ComboboxSelected>>", menu_handler)
-    combo_corrector.bind("<<ComboboxSelected>>", menu_handler)
     combo_deeplwrite.bind("<<ComboboxSelected>>", menu_handler)
     start_button.bind('<Button-1>', start_handler)  # связываем событие (нажатие Button-1 [левая кнопка мышки]) и функцию start_handler
     options_button.bind('<Button-1>', options_handler)  # связываем событие (нажатие Button-1 [левая кнопка мышки]) и функцию options_handler
@@ -176,7 +166,7 @@ def start_handler(event):
     # service_selection = choice_service.get()
     # corrector_selection = choice_corrector.get()
     if combo_deeplwrite.get() == 'Нет':
-        model.operate(combo_language.get(), combo_translate.get(), combo_service.get(), combo_corrector.get(), model.Openfilelinks()[0], model.Openfilelinks()[1], model.Openfilelinks()[4])    # Запускаем функцию перевода текстов
+        model.operate(combo_language.get(), combo_translate.get(), combo_service.get(), model.Openfilelinks()[0], model.Openfilelinks()[1], model.Openfilelinks()[4])    # Запускаем функцию перевода текстов
     else:
         deepL.deepl_write(model.Openfilelinks()[4])    # Запускаем функцию редактирования текста с помощью DeepL.Write
     start_button.config(text='Готово!')

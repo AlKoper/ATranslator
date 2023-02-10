@@ -1,4 +1,3 @@
-# импортируем необходимые пакеты для перевода
 # используем несколько переводчиков одновременно, чтобы увеличить шансы на получение ответа
 from translatepy import Translator
 # импортируем каждый переводчик отдельно, чтобы испольовать его при выборе конкретного сервиса
@@ -11,7 +10,7 @@ from translatepy.translators.translatecom import TranslateComTranslate
 #Импортируем DeepL для первода в этом сервисе
 import deepL
 from pathlib import Path  # импортируем pathlib дял удобства обработки всех файлов в папке
-import language_tool_python  # импортируем пакет для проверки грамматики/орфографии и внесения корректировок
+
 
 #Создадим функцию перевода
 def text_translate(text, sour, dest, service):    #sour - язык исходного текста, dest - язык перевода
@@ -32,13 +31,6 @@ def text_translate(text, sour, dest, service):    #sour - язык исходн�
     result = str(Translate_service.translate(text, destination_language=dest, source_language=sour))
     Translate_service.clean_cache()
     return result
-
-#Создадим функцию проверки орфографии и грамматики переведенного текста
-def text_correct(text, corrector):
-    tool = language_tool_python.LanguageTool(corrector)
-    corrected_text = tool.correct(text)
-    return corrected_text
-
 
 # Создадим функцию открытия и чтения адресов папок из файла
 def Openfilelinks():
@@ -62,7 +54,7 @@ def DeeplWrite_save(filename, text):
 
 
 #Функция обработки текста
-def operate(language, translate, service, corrector, input_files, output_files, web):
+def operate(language, translate, service, input_files, output_files, web):
     for text_file in (Path(input_files).glob('*.txt')):  #редактируем каждый находящийся текстовый файл в папке по отдельности
         file = open(text_file, 'r', encoding="utf-8")
         translated_text = ''    #создаем переменную, которая будет хранить переведенный текст, обнуляем с каждым новым текстом
@@ -76,13 +68,8 @@ def operate(language, translate, service, corrector, input_files, output_files, 
                     translated_text = translated_text + text_translate(line, language, translate, service) + '\n'  #возвращаем перевод строки и записываем в переменную
         #Убираем пустые строки в переведенном тексте с помощью регулярного выражения
         clear_translated_text = '\n'.join(el.strip() for el in translated_text.split('\n') if el.strip())
-        #Проверяем нужен ли нам корректор. Если да, то запускаем функцию с соотвествующим значением
-        if corrector == '':
-            corrected_text = clear_translated_text
-        else:
-            corrected_text = text_correct(translated_text, corrector)    #возвращаем откорректированный (орфография+грамматика) текст и записываем в переменную
         #Сохраним переведенный и откорректированный текст в новом файле
-        ed_text_save(text_file.name, corrected_text, translate, service, output_files)
+        ed_text_save(text_file.name, clear_translated_text, translate, service, output_files)
 
 
 
