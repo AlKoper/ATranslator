@@ -1,29 +1,21 @@
-# используем несколько переводчиков одновременно, чтобы увеличить шансы на получение ответа
-from translatepy import Translator
 # импортируем каждый переводчик отдельно, чтобы испольовать его при выборе конкретного сервиса
 from translatepy.translators.google import GoogleTranslate
 from translatepy.translators.yandex import YandexTranslate
 from translatepy.translators.microsoft import MicrosoftTranslate
-# from translatepy.translators.deepl import DeeplTranslate
 from translatepy.translators.reverso import ReversoTranslate
 from translatepy.translators.translatecom import TranslateComTranslate
-#Импортируем DeepL для первода в этом сервисе
-import deepL
+import deepL    #Импортируем DeepL для перевода
 from pathlib import Path  # импортируем pathlib дял удобства обработки всех файлов в папке
 
 
 #Создадим функцию перевода
 def text_translate(text, sour, dest, service):    #sour - язык исходного текста, dest - язык перевода
-    if service == 'Multi':
-        Translate_service = Translator()   #Translate_service переменная, отвечающая за сервис перевода
-    elif service == 'Google':
+    if service == 'Google':
         Translate_service = GoogleTranslate()
     elif service == 'Yandex':
         Translate_service = YandexTranslate()
     elif service == 'Microsoft':
         Translate_service = MicrosoftTranslate()
-    # elif service == 'DeepL':
-    #     Translate_service = DeeplTranslate()
     elif service == 'Reverso':
         Translate_service = ReversoTranslate()
     elif service == 'TranslateCom':
@@ -32,7 +24,7 @@ def text_translate(text, sour, dest, service):    #sour - язык исходн�
     Translate_service.clean_cache()
     return result
 
-# Создадим функцию открытия и чтения адресов папок из файла
+# Создадим функцию открытия/чтения адресов из файла FileLinks.txt (хранится/записывается информация для работы скрипта)
 def Openfilelinks():
     with open('FileLinks.txt', 'r') as file:
         lines = file.readlines()
@@ -40,36 +32,32 @@ def Openfilelinks():
 
 
 #Создадим функцию для сохранения переведенного текста в новый файл
-def ed_text_save(filename, text, translate, service, output_files):
+def trans_text_save(filename, text, translate, service):
     filename = filename[0:len(filename)-4:1]
-    # output_files = output_files + '/'
-    return open(output_files + filename + '_' + translate + '_' + service +'.txt', 'w', encoding="utf-8").write(text)
+    return open(Openfilelinks()[1] + filename + '_' + translate + '_' + service +'.txt', 'w', encoding="utf-8").write(text)
 
 
 #Создадим функцию для сохранения отредактированного (DeepL.Write) текста в новый файл
 def DeeplWrite_save(filename, text):
     filename = filename[0:len(filename) - 4:1]
-    # output_files = Openfilelinks()[3]
     return open(Openfilelinks()[2] + filename + '_Ed' + '.txt', 'w', encoding="utf-8").write(text)
 
 
 #Функция обработки текста
-def operate(language, translate, service, input_files, output_files, web):
+def operate(language, translate, service, input_files, web):
     for text_file in (Path(input_files).glob('*.txt')):  #редактируем каждый находящийся текстовый файл в папке по отдельности
         file = open(text_file, 'r', encoding="utf-8")
         translated_text = ''    #создаем переменную, которая будет хранить переведенный текст, обнуляем с каждым новым текстом
-        if service == 'DeepL':    #провереям условие для выбора сервиса перевода
+        if service == 'DeepL':    #провереям условие для выбора сервиса DeepL перевода
             translated_text = deepL.browser_translate(file, language, translate, web)    #запускаем функцию перевода и возвращаем переведенный текст и название файла для будущего сохранения
         else:    #пропишем перевод для всех остальных сервисов
-            for line in file:    #переводим текст для каждой строки из файла
-                if line == '\n':    #проверяем условие, если пустая строка, то записываем её в translated_text и идем дальше
-                    translated_text = translated_text + '\n'
-                else:
-                    translated_text = translated_text + text_translate(line, language, translate, service) + '\n'  #возвращаем перевод строки и записываем в переменную
-        #Убираем пустые строки в переведенном тексте с помощью регулярного выражения
+            for line in file:    #переводим текст для каждой строки из файла по отдельности
+                if line != '\n':    #проверяем условие, если непустая строка, то рабоатем с ней. Остальное пропускаем
+                    translated_text = translated_text + text_translate(line, language, translate, service) + '\n'  # возвращаем перевод строки и записываем в переменную
+        # Убираем пустые строки в переведенном тексте с помощью регулярного выражения
         clear_translated_text = '\n'.join(el.strip() for el in translated_text.split('\n') if el.strip())
-        #Сохраним переведенный и откорректированный текст в новом файле
-        ed_text_save(text_file.name, clear_translated_text, translate, service, output_files)
+        #Сохраним переведенный текст в новом файле
+        trans_text_save(text_file.name, clear_translated_text, translate, service)
 
 
 

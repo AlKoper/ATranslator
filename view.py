@@ -1,4 +1,3 @@
-import tkinter
 from tkinter import *    #Импортируем библиотеку для создания графического интерфейса
 from tkinter.ttk import Combobox
 import model
@@ -25,60 +24,28 @@ def center(win):
 
 #Объявим функцию с настройкой графического интерфейса главного окна
 def setup():
-    # global choice_language, choice_translate, choice_service, choice_corrector, start_button, choice_input, choice_output
-    global root, combo_language, combo_translate, combo_service, combo_corrector, combo_deeplwrite, start_button   # text_input, text_output, webdriver_address
-    #глобальные переменнеые, которые будем использовать в фукнции нажатия кнопки
-    # Создадим окно верхнего уровня
+    global root, combo_language, combo_translate, combo_service, combo_corrector, combo_deeplwrite, start_button
+    # Создадим главное окно
     root = Tk()
     root.title('A_Translator')    #введем тайтл
     root.geometry('400x300')    #установим размер окна
     root.config(bg='light blue')    #установим фон окна
-    center(root)
+    center(root)    #расположим окно по центру
 
-    #Создадим объекты в окне (подписи + кнопка):
+    #Создадим объекты в окне (подписи + кнопки):
     text_language = Label(root, width=6, font='Calibri 17', text='Язык:', bg='light blue')
     text_translate = Label(root, width=8, font='Calibri 17', text='Перевод:', bg='light blue')
     text_service = Label(root, width=7, font='Calibri 17', text='Сервис:', bg='light blue')
-    text_corrector = Label(root, width=10, font='Calibri 17', text='Корректор:', bg='light blue')
-    text_input_label = Label(root, width=9, font='Calibri 12', text='Input files:', bg='light blue')
-    text_output_label = Label(root, width=9, font='Calibri 12', text='Output files:', bg='light blue')
-    webdriverfiles_label = Label(root, width=12, font='Calibri 12', text='WebDriver files:', bg='light blue')
     deeplwrite_label = Label(root, width=10, font='Calibri 17', text='DeepL.Write:', bg='light blue')
     start_button = Button(root, font=('Calibri', 14), text='Поехали!', width=20, bg='light grey')
     options_button = Button(root, font=('Calibri', 10), text='Настройки', width=20, bg='light grey')
 
-    #Создадим менюшки для ввода текста ввода/вывода текстовых файлов
-    #Создадим переменнеы. котореы будут хранить адерса папок ввода/вывода по умолчанию. Используем эти адреса в программе по умолчанию
-    # choice_input = StringVar(root)
-    # choice_output = StringVar(root)
-    # text_input = Entry(root, background='white', justify=LEFT, width=51, textvariable=choice_input)
-    # text_output = Entry(root, background='white', justify=LEFT, width=51, textvariable=choice_output)
-    text_input = Entry(root, background='white', justify=LEFT, width=51)
-    text_output = Entry(root, background='white', justify=LEFT, width=51)
-    webdriver_address = Entry(root, background='white', justify=LEFT, width=51)
-
-    # прочитаем файл, чтобы узнать расположение папок для текстовых файлов
-    # text_input.insert(0, 'D:\Translated texts\Input files')    #Используем этот адрес по умолчанию (место расположения исходных текстов) (ПК)
-    # text_output.insert(0, 'D:\Translated texts\Output files')    #Используем этот адрес по умолчанию (место, куда выкладываем переработанные тексты) (ПК)
-    # webdriver_address.insert(0, '')    #Используем этот адрес по умолчанию (место, куда выкладываем переработанные тексты) (ПК)
-    # text_input.insert(0, '/media/andrew/75A74AA74301978F/PycharmProjects/ATranslator/Input files/')  # Используем этот адрес по умолчанию (место расположения исходных текстов) (Ноут)
-    # text_output.insert(0, '/media/andrew/75A74AA74301978F/PycharmProjects/ATranslator/Output files/')  # Используем этот адрес по умолчанию (место, куда выкладываем переработанные тексты) (Ноут)
-    text_input.insert(0, model.Openfilelinks()[0]) # Используем этот адрес по умолчанию (место расположения исходных текстов) (Ноут)
-    text_output.insert(0, model.Openfilelinks()[1]) # Используем этот адрес по умолчанию (место, куда выкладываем переработанные тексты) (Ноут)
-    webdriver_address.insert(0, model.Openfilelinks()[2])   # Используем этот адрес по умолчанию (место, куда выкладываем переработанные тексты) (Ноут)
-
-    # Создадим списки (выпадающие меню):
-    #Сперва создадим переменные, которые будут хранить зачения выбора пользователя перед запуском обработки текста
-    # choice_language = StringVar(root)    #переменная, которая будет хранить значение исходного языка после выбора пользователя из выпадающего меню
-    # choice_translate = StringVar(root)    #переменная, которая будет хранить значение язфка перевода после выбора пользователя из выпадающего меню
-    # choice_service = StringVar(root)    #переменная, которая будет хранить значение сервиса перевода после выбора пользователя из выпадающего меню
-    # choice_corrector = StringVar(root)    #переменная, которая будет хранить значение корректора после выбора пользователя из выпадающего меню
+    #Создадим выпадающие меню
     #Создадим списки выбора из выпадающих меню
     language_values = ('ru', 'en', 'de', 'fr', 'it', 'es', 'pt', 'ja')
     translate_values = ('en', 'ru', 'de', 'fr', 'it', 'es', 'pt', 'ja')
-    service_values = ('DeepL', 'Microsoft','Google', 'Reverso', 'TranslateCom', 'Yandex', 'Multi')
+    service_values = ('DeepL', 'Microsoft', 'Yandex', 'Google', 'Reverso', 'TranslateCom')
     deeplwrite_values = ('Нет', 'Да')
-    #Создадим выпадающие меню
     #Меню исходного языка
     # combo_language = Combobox(root, textvariable=choice_language)
     combo_language = Combobox(root)
@@ -99,19 +66,12 @@ def setup():
     combo_deeplwrite['values'] = deeplwrite_values    #Зададим значения сервисов для перевода
     combo_deeplwrite.current(0)  # Устанавливаем по умолчанию первое значение из списка
 
-    #2-й вариант размещения виджетов
-    # размещаем вводнеы данные
-    # text_input_label.grid(row=0, column=0, pady=0, padx=16, sticky=W)
-    # text_input.grid(row=1, padx=20, columnspan=2)
-    # text_output_label.grid(row=2, column=0, pady=0, padx=21, sticky=W)
-    # text_output.grid(row=3, padx=20, columnspan=2)
-    # webdriverfiles_label.grid(row=4, column=0, pady=0, padx=21, sticky=W)
-    # webdriver_address.grid(row=5, padx=20, columnspan=2)
+    #Размещаем виджеты в главном окне
     # размещаем разделяющую линию
     line = Canvas(root, width=300, height=20, bg='light blue', highlightthickness=0)
     line.create_line(5, 15, 295, 15, fill='black', width=2)
     line.grid(row=0, padx=0, pady=10, columnspan=2)
-    # размещаем выбор сервисов и кнопку
+    # размещаем выбор сервисов
     text_language.grid(row=1, column=0, pady=0, padx=16, sticky=E)
     combo_language.grid(row=1, column=1, pady=0, padx=10, sticky=W)
     text_translate.grid(row=2, column=0, pady=0, padx=22, sticky=E)
@@ -127,7 +87,6 @@ def setup():
     # размещаем кнопки
     start_button.grid(row=6, columnspan=2, pady=0)
     options_button.grid(row=7, columnspan=2, pady=0, padx=0)
-
 
     # Содадим взаимодействие с виджетами
     combo_language.bind("<<ComboboxSelected>>", menu_handler)
@@ -145,28 +104,11 @@ def menu_handler(event):
 
 #Обработчик для кнопки start_button
 def start_handler(event):
-    # global combo_language, combo_translate, combo_service, combo_corrector, start_button # text_input, text_output, webdriver_address
-    # global choice_language, choice_translate, choice_service, choice_corrector, start_button, choice_input, choice_output
     #Возвратим значения из выпадающих меню и присвоим их соответствующим переменным
     start_button.config(text='В процессе...')
-    # input_files_selection = model.Openfilelinks()[0]
-    # output_files_selection = model.Openfilelinks()[1]
-    # language_selection = combo_language.get()
-    # translate_selection = combo_translate.get()
-    # service_selection = combo_service.get()
-    # corrector_selection = combo_corrector.get()
-    # # сохраним в файл пути для вводных значений для будущего использования (input, output and webdriver links)
-    # new_FileLinks = ['Input files:', input_files_selection, 'Output files:', output_files_selection, 'WebDriver:', webdriver_selection, 'Output DeepL edited files:', '/media/andrew/75A74AA74301978F/PycharmProjects/ATranslator/Output files/Edited/']
-    # with open('FileLinks.txt', 'w') as file:
-    #     file.writelines("%s\n" % line for line in new_FileLinks)
-    # input_files_selection = choice_input.get()
-    # output_files_selection = choice_output.get()
-    # language_selection = choice_language.get()
-    # translate_selection = choice_translate.get()
-    # service_selection = choice_service.get()
-    # corrector_selection = choice_corrector.get()
+    # запустим необходимое действие: перевод или редактирование текстов
     if combo_deeplwrite.get() == 'Нет':
-        model.operate(combo_language.get(), combo_translate.get(), combo_service.get(), model.Openfilelinks()[0], model.Openfilelinks()[1], model.Openfilelinks()[4])    # Запускаем функцию перевода текстов
+        model.operate(combo_language.get(), combo_translate.get(), combo_service.get(), model.Openfilelinks()[0], model.Openfilelinks()[4])    # Запускаем функцию перевода текстов
     else:
         deepL.deepl_write(model.Openfilelinks()[4])    # Запускаем функцию редактирования текста с помощью DeepL.Write
     start_button.config(text='Готово!')
@@ -175,7 +117,7 @@ def start_handler(event):
 def options_handler(event):
     global options_window, text_input, text_output, text_deeplwrite, webdriverfiles, combo_webdriver
     # Создадим окно настроек и расположим его по центру
-    options_window = tkinter.Toplevel(root)
+    options_window = Toplevel(root)
     options_window.title('Настройки')
     options_window.geometry('400x300')
     options_window.config(bg='light blue')
@@ -193,7 +135,7 @@ def options_handler(event):
     webdriverfiles = Entry(options_window, background='white', justify=LEFT, width=44)
     save_button = Button(options_window, font=('Calibri', 14), text='Сохранить', width=14, bg='light grey')
     # Создадим выпадающие меню
-    webdriver_values = ('Chrome', 'Firefox')
+    webdriver_values = (model.Openfilelinks()[4], 'Chrome', 'Firefox')
     combo_webdriver = Combobox(options_window)
     combo_webdriver['values'] = webdriver_values  # Зададим значения для выбора
     combo_webdriver.current(0)  # Устанавливаем по умолчанию первое значение из списка
