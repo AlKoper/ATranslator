@@ -28,10 +28,11 @@ def browser_translate(file, language, translate, web):
             browser.find_element(By.XPATH, '//*[@id="panelTranslateText"]/div[1]/div[2]/section[1]/div[3]/div[2]/d-textarea/div').send_keys(line)
             sleep(5)  # спим 5 секунд, чтобы сервис перевёл текст, с параметром можно поэксперементировать
             #Выгружаем перевод
-            html = browser.page_source
-            soup = BeautifulSoup(html, 'lxml')
-            translation = soup.find('div', id='target-dummydiv')
-            translated_text = translated_text + translation.text    #Записываем перевод в переменную
+            # html = browser.page_source
+            # soup = BeautifulSoup(html, 'lxml')
+            # translation = soup.find('div', id='target-dummydiv')
+            # translated_text = translated_text + translation.text    #Записываем перевод в переменную
+            translated_text = translated_text + browser.find_element(By.XPATH, '/html/body/div[3]/main/div[5]/div[1]/div[2]/section[2]/div[3]/div[1]/d-textarea').text +'\n'   #Записываем перевод в переменную
             browser.find_element(By.XPATH, '//*[@id="panelTranslateText"]/div[1]/div[2]/section[1]/div[3]/div[2]/d-textarea/div').clear()    #очистим поле для следующей строки
     browser.close()
     browser.quit()
@@ -62,10 +63,10 @@ def deepl_write(web):
                 browser.find_element(By.XPATH, '//*[@id="panelTranslateText"]/div/div[2]/section[1]/div[3]/div[2]/d-textarea/div').clear()
                 browser.find_element(By.XPATH, '//*[@id="panelTranslateText"]/div/div[2]/section[1]/div[3]/div[2]/d-textarea/div').send_keys(line)  # вставляем переведенный текст
                 sleep(5)    # спим 5 секунд, чтобы сервис отредактировал текст, с параметром можно поэксперементировать
-                html = browser.page_source
-                soup = BeautifulSoup(html, 'lxml')
-                edited_text = soup.find('div', id='target-dummydiv')
-                writed_text = writed_text + edited_text.text  # Записываем новую струку в отредактированный текст
+                # html = browser.page_source
+                # soup = BeautifulSoup(html, 'lxml')
+                # edited_text = soup.find('div', id='target-dummydiv')
+                writed_text = writed_text + browser.find_element(By.XPATH, '//*[@id="panelTranslateText"]/div/div[2]/section[2]/div[3]/div[1]/d-textarea/div').text + '\n'  # Записываем новую струку в отредактированный текст
                 browser.find_element(By.XPATH, '//*[@id="panelTranslateText"]/div/div[2]/section[1]/div[3]/div[2]/d-textarea/div').clear()    #очистим поле для следующей строки
         writed_text_clear = '\n'.join(el.strip() for el in writed_text.split('\n') if el.strip())    #Убираем пустые строки в отредактируемом тексте с помощью регулярного выражения
         model.DeeplWrite_save(text_file.name, writed_text_clear)
